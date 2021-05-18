@@ -27,7 +27,7 @@ export class TokenGenerator {
         
         bytes = [0, 0, 0, 0].concat(bytes); //counter value must be 8-bytes, timestep is only 32-bit (4-bytes) so needs 4 bytes of padding
 
-        let hmacResult = await window.crypto.subtle.sign({ name: "HMAC", hash: "SHA-1" }, this.key, new Uint8Array(bytes));
+        let hmacResult = await window.crypto.subtle.sign("HMAC", this.key, new Uint8Array(bytes));
         let hotp = this.getHOTP(new Uint8Array(hmacResult));
 
         return hotp;
