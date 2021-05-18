@@ -1,7 +1,8 @@
-import { Base32 } from "./Base32.js";
+import { Binary } from "./Binary.js";
 
 export class TokenGenerator {
     private key: CryptoKey;
+    /** A promise indicating when the TokenGenerator is ready to be used */
     public readonly ready: Promise<void>;
 
     constructor(private secret: Uint8Array) {
@@ -19,12 +20,12 @@ export class TokenGenerator {
 
     async getToken(timestep: number) {
         if(!this.key)
-            throw new TypeError("Generator is not ready yet");
+            await this.ready;
 
-        let timestep_binary = Base32.toBinary(timestep, 32);
-        let bytes = Array(4).fill(0).map((_, idx) => Base32.parseBinary(timestep_binary.slice(idx * 8, (idx + 1) * 8).join('')));
+        let timestep_binary = Binary.toBinary(timestep);
+        let bytes = Array(4).fill(0).map((_, idx) => Binary.binaryToInt(timestep_binary.slice(idx * 8, (idx + 1) * 8)));
         
-        bytes = Array(4).fill(0).concat(bytes); //counter value must be 8-bytes, timestep is only 32-bit (4-bytes) so needs 4 bytes of padding
+        bytes = [0, 0, 0, 0].concat(bytes); //counter value must be 8-bytes, timestep is only 32-bit (4-bytes) so needs 4 bytes of padding
 
         let hmacResult = await window.crypto.subtle.sign({ name: "HMAC", hash: "SHA-1" }, this.key, new Uint8Array(bytes));
         let hotp = this.getHOTP(new Uint8Array(hmacResult));
@@ -33,7 +34,7 @@ export class TokenGenerator {
     }
 
     private getHOTP(hmac_result: Uint8Array) {
-        let offset   =  hmac_result[19] & 0xf ;
+        let offset   =  hmac_result[19] & 0xf;
         let bin_code = (hmac_result[offset]  & 0x7f) << 24
            | (hmac_result[offset+1] & 0xff) << 16
            | (hmac_result[offset+2] & 0xff) <<  8
