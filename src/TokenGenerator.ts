@@ -6,16 +6,9 @@ export class TokenGenerator {
     public readonly ready: Promise<void>;
 
     constructor(private secret: Uint8Array) {
-        this.ready = new Promise(async (resolve, reject) => {
-            try {
+        this.ready = (async () => {
                 this.key = await window.crypto.subtle.importKey("raw", this.secret, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
-                resolve();
-            }
-            catch(err) {
-                console.error(err);
-                reject();
-            }
-        })
+        })();
     }
 
     async getToken(timestep: number) {
