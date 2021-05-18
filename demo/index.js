@@ -4,7 +4,6 @@ export class Index {
     constructor() {
         const SECRET = "JBSWY3DPEHPK3PXP";
         let decoded = Base32.decode(SECRET);
-        console.log(new TextDecoder().decode(decoded));
         let gen = new TokenGenerator(decoded);
         let timerSpan = Index.getElement("timer");
         let codeSpan = Index.getElement("code");
