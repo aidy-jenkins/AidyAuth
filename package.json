@@ -4,7 +4,7 @@
     "ts-node": "^9.1.1"
   },
   "name": "libaidyauth",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Library for generating TOTP codes from a base32 encoded secret",
   "main": "n/a",
   "scripts": {
