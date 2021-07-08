@@ -6,3 +6,4 @@ index.ts
 index.html
 .fuse_hidden*
 *.tgz
+tsconfig.json
