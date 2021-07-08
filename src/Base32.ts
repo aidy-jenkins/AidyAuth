@@ -7,7 +7,6 @@ export module Base32 {
     /**
      * Decodes a Base32 encoded string as a Uint8Array of bytes
      * @param data 
-     * @returns 
      */
     export function decode(data: string) {
         let numbers = (Array.from(data) as (keyof (typeof dictionary))[]).map(char => dictionary[char.toUpperCase()]);

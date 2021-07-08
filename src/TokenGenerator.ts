@@ -16,7 +16,7 @@ export class TokenGenerator {
             await this.ready;
 
         let timestep_binary = Binary.toBinary(timestep);
-        let bytes = Array(4).fill(0).map((_, idx) => Binary.binaryToInt(timestep_binary.slice(idx * 8, (idx + 1) * 8)));
+        let bytes = [0, 0, 0, 0].map((_, idx) => Binary.binaryToInt(timestep_binary.slice(idx * 8, (idx + 1) * 8)));
         
         bytes = [0, 0, 0, 0].concat(bytes); //counter value must be 8-bytes, timestep is only 32-bit (4-bytes) so needs 4 bytes of padding
 
