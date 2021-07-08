@@ -7,3 +7,4 @@ index.html
 .fuse_hidden*
 *.tgz
 tsconfig.json
+bin/es5/tsconfig.json
