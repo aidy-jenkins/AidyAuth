@@ -2,24 +2,17 @@ import { Binary } from "./Binary.js";
 export class TokenGenerator {
     constructor(secret) {
         this.secret = secret;
-        this.ready = new Promise(async (resolve, reject) => {
-            try {
-                this.key = await window.crypto.subtle.importKey("raw", this.secret, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
-                resolve();
-            }
-            catch (err) {
-                console.error(err);
-                reject();
-            }
-        });
+        this.ready = (async () => {
+            this.key = await window.crypto.subtle.importKey("raw", this.secret, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
+        })();
     }
     async getToken(timestep) {
         if (!this.key)
             await this.ready;
         let timestep_binary = Binary.toBinary(timestep);
-        let bytes = Array(4).fill(0).map((_, idx) => Binary.binaryToInt(timestep_binary.slice(idx * 8, (idx + 1) * 8)));
+        let bytes = [0, 0, 0, 0].map((_, idx) => Binary.binaryToInt(timestep_binary.slice(idx * 8, (idx + 1) * 8)));
         bytes = [0, 0, 0, 0].concat(bytes);
-        let hmacResult = await window.crypto.subtle.sign({ name: "HMAC", hash: "SHA-1" }, this.key, new Uint8Array(bytes));
+        let hmacResult = await window.crypto.subtle.sign("HMAC", this.key, new Uint8Array(bytes));
         let hotp = this.getHOTP(new Uint8Array(hmacResult));
         return hotp;
     }
