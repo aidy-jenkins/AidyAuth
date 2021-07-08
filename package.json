@@ -4,12 +4,9 @@
     "ts-node": "^9.1.1"
   },
   "name": "libaidyauth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Library for generating TOTP codes from a base32 encoded secret",
   "main": "n/a",
-  "bin": {
-    "libaidyauth": "TokenGenerator.js"
-  },
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine"
   },
